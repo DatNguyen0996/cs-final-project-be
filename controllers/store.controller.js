@@ -1,13 +1,14 @@
 const { catchAsync, sendResponse, AppError } = require("../helpers/utils");
 const Store = require("../models/Store");
 const storeController = {};
+const limitDefault = process.env.LIMIT;
 
 //Get all store
 storeController.getStores = catchAsync(async (req, res, next) => {
   //Get data from request
   let { page, limit, storeName } = req.query;
   page = parseInt(page) || 1;
-  limit = parseInt(limit) || 10;
+  limit = parseInt(limit) || limitDefault;
   //Process
   let filterConditions = [{ isDeleted: false }];
   if (storeName)
@@ -21,7 +22,8 @@ storeController.getStores = catchAsync(async (req, res, next) => {
   const totalPage = Math.ceil(countStores / limit);
   const offset = limit * (page - 1);
   const stores = await Store.find(filterCriteria)
-    .sort({ createdAt: -1 })
+    .populate("administrator")
+    .sort({ createdAt: 1 })
     .skip(offset)
     .limit(limit);
 

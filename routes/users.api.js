@@ -29,7 +29,7 @@ router.get("/me", loginRequire, getCurrentUser);
  * @description get gingle user by ID
  * @access public
  */
-router.get("/:id", loginRequire, validatorId, getSingltUser);
+router.get("/:id", validatorId, getSingltUser);
 
 /**
  * @route Post /users

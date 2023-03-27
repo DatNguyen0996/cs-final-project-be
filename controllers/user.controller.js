@@ -2,11 +2,13 @@ const User = require("../models/User");
 const { sendResponse, AppError, catchAsync } = require("../helpers/utils");
 const bcrypt = require("bcryptjs");
 const userController = {};
+const limitDefault = process.env.LIMIT;
 
 //Create a new user
 userController.register = catchAsync(async (req, res, next) => {
   //Get data from request
-  let { name, email, password } = req.body;
+  let { name, email, password, role, address } = req.body;
+  console.log(req.body);
   name = name.toLowerCase();
 
   // Validation
@@ -18,7 +20,7 @@ userController.register = catchAsync(async (req, res, next) => {
   //Process
   const salt = await bcrypt.genSalt(10);
   password = await bcrypt.hash(password, salt);
-  user = await User.create({ name, email, password });
+  user = await User.create({ name, email, password, role, address });
   const accessToken = await user.generateToken();
 
   //Response
@@ -35,16 +37,19 @@ userController.register = catchAsync(async (req, res, next) => {
 //Get all users
 userController.getUsers = catchAsync(async (req, res, next) => {
   //Get data from request
-  const currentUser = req.Id;
-  let { page, limit, name } = req.query;
+  let { page, limit, name, role } = req.query;
   page = parseInt(page) || 1;
-  limit = parseInt(limit) || 10;
+  limit = parseInt(limit) || limitDefault;
 
   // Validation
 
-  let filterConditions = [{ isDelete: false }];
+  let filterConditions = [{ isDelete: false }, { new: true }];
   if (name) {
     filterConditions.push({ name: { $regex: name, $options: "i" } });
+  }
+
+  if (role) {
+    filterConditions.push({ role: role });
   }
   const filterCriteria = filterConditions.length
     ? { $and: filterConditions }
@@ -74,7 +79,6 @@ userController.getUsers = catchAsync(async (req, res, next) => {
 userController.getCurrentUser = catchAsync(async (req, res, next) => {
   //Get data from request
   const currentUserId = req.userId;
-  console.log(currentUserId);
 
   // Validation
   const currentUser = await User.findById(currentUserId);

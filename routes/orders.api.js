@@ -8,6 +8,8 @@ const {
   createOrder,
   updateOrder,
   deleteOrder,
+  getOrderOfUserMe,
+  getOrderOfStore,
 } = require("../controllers/order.controller");
 
 /**
@@ -16,6 +18,20 @@ const {
  * @access public
  */
 router.get("/", getOrders);
+
+/**
+ * @route Get /orders?page=1&limit=10
+ * @description get all order of current user
+ * @access public
+ */
+router.get("/user/:id", loginRequire, validatorId, getOrderOfUserMe);
+
+/**
+ * @route Get /orders?page=1&limit=10
+ * @description get all order of store
+ * @access public
+ */
+router.get("/store/:id", loginRequire, validatorId, getOrderOfStore);
 
 /**
  * @route Get /orders/:orderid

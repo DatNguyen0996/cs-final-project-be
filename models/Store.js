@@ -9,7 +9,7 @@ const storeSchema = Schema(
 
     address: { type: String || null, default: null },
 
-    administrator: { type: String, default: null },
+    administrator: { type: String, default: null, ref: "User" },
 
     isDeleted: {
       type: Boolean,

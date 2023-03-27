@@ -5,38 +5,62 @@ const orderSchema = Schema(
   {
     name: { type: String, default: "Bedminton Store" },
 
-    customerID: { type: Number, default: null, require: true },
+    userId: {
+      type: mongoose.SchemaTypes.ObjectId || null,
+      ref: "User",
+      default: null,
+      require: true,
+    },
 
-    phone: { type: Number, default: null, require: true },
+    receiver: { type: String, default: "", require: true },
+
+    phone: { type: String, default: null, require: true },
 
     address: { type: String, default: "" },
 
-    storeID: { type: Number, default: null, require: true },
+    storeId: {
+      type: Schema.ObjectId,
+      default: null,
+      require: true,
+      ref: "User",
+    },
 
-    items: { type: Object, default: {} },
-
-    totalItems: { type: Number, default: null, require: true },
+    items: [
+      {
+        product: { type: Schema.ObjectId, ref: "Product" },
+        quantity: { type: Number },
+        totalPrice: { type: Number },
+      },
+    ],
 
     totalPrice: { type: Number, default: null, require: true },
 
     receiving: {
       type: String,
-      default: "shop",
+      default: "delivery",
       enum: ["delivery", "shop"],
       require: true,
     },
 
     payment: {
       type: String,
-      default: "",
-      enum: ["", "cash", "banking"],
+      default: "cash",
+      enum: ["cash", "banking"],
       require: true,
     },
 
     status: {
       type: String,
-      default: "waiting",
-      enum: ["waiting", "packed", "waiting delivery", "delivery", "success"],
+      default: "pending",
+      enum: [
+        "pending",
+        "packing",
+        "waiting",
+        "delivery",
+        "paymented",
+        "success",
+        "cancle",
+      ],
       require: true,
     },
 

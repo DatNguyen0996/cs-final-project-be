@@ -21,4 +21,16 @@ router.use("/orders", ordersApi);
 const productsApi = require("./products.api");
 router.use("/products", productsApi);
 
+// wareHouse api
+const productsOfStoreApi = require("./productsOfStore.api");
+router.use("/productsOfStore", productsOfStoreApi);
+
+// cart api
+const cartApi = require("./cart.api");
+router.use("/carts", cartApi);
+
+// review api
+const reviewApi = require("./review.api");
+router.use("/reviews", reviewApi);
+
 module.exports = router;

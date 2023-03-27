@@ -44,7 +44,7 @@ const productSchema = Schema(
 
     size: { type: Array, default: [] },
 
-    sold: { type: Number, default: 0 },
+    saleOff: { type: Number, default: 0 },
 
     gender: { type: String, default: "" },
 

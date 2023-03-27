@@ -61,13 +61,21 @@ validator.validatorCreateStore = (req, res, next) => {
 
 //validate data update store
 validator.validatorUpdateStore = (req, res, next) => {
-  const validationArray = [
-    body(
-      "administrator",
-      "Administrator must be a MongoDB ObjectId"
-    ).isMongoId(),
-  ];
-  checkError(validationArray, req, res, next);
+  let { administrator } = req.body;
+
+  console.log(administrator === "" || administrator === null);
+
+  if (administrator === "" || administrator === null) {
+    next();
+  } else {
+    const validationArray = [
+      body(
+        "administrator",
+        "Administrator must be a MongoDB ObjectId"
+      ).isMongoId(),
+    ];
+    checkError(validationArray, req, res, next);
+  }
 };
 
 module.exports = validator;

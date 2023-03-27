@@ -7,6 +7,7 @@ const {
   getSingleProduct,
   createProduct,
   updateProduct,
+  filterProduct,
   deleteProduct,
 } = require("../controllers/product.controller");
 
@@ -22,7 +23,14 @@ router.get("/", getProducts);
  * @description get gingle product by ID
  * @access login require
  */
-router.get("/:id", loginRequire, validatorId, getSingleProduct);
+router.get("/:id", validatorId, getSingleProduct);
+
+/**
+ * @route Post /products/filter
+ * @description filter product
+ * @access public
+ */
+router.post("/filter", filterProduct);
 
 /**
  * @route Post /products
