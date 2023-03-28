@@ -33,4 +33,8 @@ router.use("/carts", cartApi);
 const reviewApi = require("./review.api");
 router.use("/reviews", reviewApi);
 
+// review api
+const contactApi = require("./contact.api");
+router.use("/contacts", contactApi);
+
 module.exports = router;

@@ -20,6 +20,10 @@ const userSchema = Schema(
 
     phone: { type: Number, default: null },
 
+    gender: { type: String, default: null },
+
+    dateOfBirth: { type: String, default: null },
+
     address: { type: String, default: "" },
     // cart: { type: Array, default: [], ref: "Product" },
     cart: [

@@ -22,7 +22,7 @@ const orderSchema = Schema(
       type: Schema.ObjectId,
       default: null,
       require: true,
-      ref: "User",
+      ref: "Store",
     },
 
     items: [

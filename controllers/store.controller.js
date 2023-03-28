@@ -9,6 +9,8 @@ storeController.getStores = catchAsync(async (req, res, next) => {
   let { page, limit, storeName } = req.query;
   page = parseInt(page) || 1;
   limit = parseInt(limit) || limitDefault;
+
+  console.log(page, limit);
   //Process
   let filterConditions = [{ isDeleted: false }];
   if (storeName)

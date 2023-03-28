@@ -74,6 +74,8 @@ orderController.getOrderOfUserMe = catchAsync(async (req, res, next) => {
   const totalPage = Math.ceil(countOrders / limit);
   const offset = limit * (page - 1);
   const orders = await Order.find(filterCriteria)
+    .populate("userId")
+    .populate("storeId")
     .populate("items.product")
     .sort({ createdAt: -1 })
     .skip(offset)

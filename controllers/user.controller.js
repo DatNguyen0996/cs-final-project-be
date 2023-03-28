@@ -14,7 +14,7 @@ userController.register = catchAsync(async (req, res, next) => {
   // Validation
   let user = await User.findOne({ email });
   if (user) {
-    throw new AppError(400, "user already exists", "Registration Error");
+    throw new AppError(400, "Tài khoản đã tồn tại", "Registration Error");
   }
 
   //Process
@@ -134,15 +134,15 @@ userController.updateUser = catchAsync(async (req, res, next) => {
     "password",
     "phone",
     "address",
-    "cart",
-    "orders",
+    "gender",
+    "dayOfBirth",
   ];
   updateAllow = updateAllow.filter((field) =>
     Object.keys(updateInfor).includes(field)
   );
   if (updateAllow.length === 0)
     throw new AppError(400, "Not allow to update", "Update eror");
-
+  console.log(updateInfor);
   //Process
   const user = await User.findByIdAndUpdate(id, updateInfor, options);
   if (!user) throw new AppError(400, "User not found", "Get user Error");
