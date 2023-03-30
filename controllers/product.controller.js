@@ -31,27 +31,6 @@ productController.createProduct = catchAsync(async (req, res, next) => {
     "saleOff",
   ];
 
-  // const countProducts = await Product.countDocuments({
-  //   productType: productInfor.productType,
-  // });
-
-  // let code;
-
-  // const codeValue = [
-  //   { racket: "A" },
-  //   { shoe: "B" },
-  //   { shirt: "C" },
-  //   { shorts: "D" },
-  //   { sportDress: "E" },
-  //   { accessory: "F" },
-  // ];
-
-  // codeValue.map((e) => {
-  //   Object.keys(e)[0] === productInfor.productType
-  //     ? (code = `P-${Object.values(e)[0]}-${countProducts + 1}`)
-  //     : code;
-  // });
-
   if (Object.keys(productInfor).length !== 0) {
     fieldAllow = fieldAllow.filter((field) =>
       Object.keys(productInfor).includes(field)
@@ -61,8 +40,14 @@ productController.createProduct = catchAsync(async (req, res, next) => {
   }
 
   const createData = { ...productInfor };
+  const { code } = productInfor;
 
-  const product = await Product.create(createData);
+  let product = await User.findOne({ code });
+  if (product) {
+    throw new AppError(400, "Sản phẩm đã tồn tại", "create produce Error");
+  }
+
+  product = await Product.create(createData);
 
   //Response
   return sendResponse(
