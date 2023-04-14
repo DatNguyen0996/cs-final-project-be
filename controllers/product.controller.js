@@ -41,7 +41,7 @@ productController.createProduct = catchAsync(async (req, res, next) => {
 
   const createData = { ...productInfor };
   const { code } = productInfor;
-
+  console.log({ code });
   let product = await Product.findOne({ code });
   if (product) {
     throw new AppError(400, "Sản phẩm đã tồn tại", "create produce Error");
