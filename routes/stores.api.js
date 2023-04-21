@@ -7,6 +7,10 @@ const {
   validatorUpdateStore,
 } = require("../middlewares/validator");
 const {
+  adminOrManagerCheck,
+  managerCheck,
+} = require("../middlewares/permission");
+const {
   getStores,
   getSingleStore,
   createStore,
@@ -34,7 +38,7 @@ router.get("/:id", loginRequire, validatorId, getSingleStore);
  * @body {name, email, password}
  * @access public
  */
-router.post("/", loginRequire, validatorCreateStore, createStore);
+router.post("/", loginRequire, managerCheck, validatorCreateStore, createStore);
 
 /**
  * @route Put /stores/:storeid
@@ -45,6 +49,7 @@ router.post("/", loginRequire, validatorCreateStore, createStore);
 router.put(
   "/:id",
   loginRequire,
+  managerCheck,
   validatorId,
   validatorUpdateStore,
   updateStore
@@ -55,6 +60,6 @@ router.put(
  * @description delete a store
  * @access public
  */
-router.delete("/:id", loginRequire, validatorId, deleteStore);
+router.delete("/:id", loginRequire, managerCheck, validatorId, deleteStore);
 
 module.exports = router;

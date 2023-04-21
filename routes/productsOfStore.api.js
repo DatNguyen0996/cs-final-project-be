@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { loginRequire } = require("../middlewares/authentication");
 const { validatorId } = require("../middlewares/validator");
+const { adminOrManagerCheck } = require("../middlewares/permission");
 const {
   getProductsOfAllStore,
   getProductOfOneStore,
@@ -11,40 +12,52 @@ const {
 } = require("../controllers/productsOfStore.controller");
 
 /**
- * @route Get /stores?page=1&limit=10&name=<storename>
- * @description get all stores
+ * @route Get
+ * @description
  * @access public
  */
 router.get("/", getProductsOfAllStore);
 
 /**
- * @route Get /stores?page=1&limit=10&name=<storename>
- * @description get all stores
+ * @route Get
+ * @description
  * @access public
  */
 router.get("/allproduct", getProductOfOneStore);
 
 /**
- * @route Post /stores
- * @description create a new store
- * @body {name, email, password}
+ * @route Post
+ * @description
+ * @body
  * @access public
  */
-router.post("/", loginRequire, createProductsOfStore);
+router.post("/", loginRequire, adminOrManagerCheck, createProductsOfStore);
 
 /**
- * @route Put /stores/:storeid
- * @description update store infomation
- * @body {productId}
+ * @route Put
+ * @description
+ * @body
  * @access public
  */
-router.put("/:id", loginRequire, validatorId, updateProductsOfStore);
+router.put(
+  "/:id",
+  loginRequire,
+  adminOrManagerCheck,
+  validatorId,
+  updateProductsOfStore
+);
 
 /**
- * @route Delete /stores/:storeid
- * @description delete a store
+ * @route Delete
+ * @description delete
  * @access public
  */
-router.delete("/:id", loginRequire, validatorId, deleteProductsOfStore);
+router.delete(
+  "/:id",
+  loginRequire,
+  adminOrManagerCheck,
+  validatorId,
+  deleteProductsOfStore
+);
 
 module.exports = router;

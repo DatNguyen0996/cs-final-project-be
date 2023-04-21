@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { loginRequire } = require("../middlewares/authentication");
+const { adminOrManagerCheck } = require("../middlewares/permission");
 const { validatorId } = require("../middlewares/validator");
 const {
   getCart,
@@ -30,7 +31,7 @@ router.post("/", createCart);
  * @body {}
  * @access login require
  */
-router.put("/:id", loginRequire, validatorId, updateCart);
+router.put("/:id", loginRequire, adminOrManagerCheck, validatorId, updateCart);
 
 /**
  * @route Delete /carts:/cartid

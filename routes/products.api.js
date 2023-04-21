@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { loginRequire } = require("../middlewares/authentication");
 const { validatorId } = require("../middlewares/validator");
+const { managerCheck } = require("../middlewares/permission");
 const {
   getProducts,
   getSingleProduct,
@@ -38,7 +39,7 @@ router.post("/filter", filterProduct);
  * @body {}
  * @access login require
  */
-router.post("/", loginRequire, createProduct);
+router.post("/", loginRequire, managerCheck, createProduct);
 
 /**
  * @route Put /products:/productid
@@ -46,12 +47,12 @@ router.post("/", loginRequire, createProduct);
  * @body {}
  * @access login require
  */
-router.put("/:id", loginRequire, validatorId, updateProduct);
+router.put("/:id", loginRequire, managerCheck, validatorId, updateProduct);
 
 /**
  * @route Delete /products:/productid
  * @description delete a product
  * @access login require
  */
-router.delete("/:id", loginRequire, validatorId, deleteProduct);
+router.delete("/:id", loginRequire, managerCheck, validatorId, deleteProduct);
 module.exports = router;

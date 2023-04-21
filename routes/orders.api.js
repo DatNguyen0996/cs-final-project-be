@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { loginRequire } = require("../middlewares/authentication");
 const { validatorId } = require("../middlewares/validator");
+const { adminOrManagerCheck } = require("../middlewares/permission");
 const {
   getOrders,
   getSingleOrder,
@@ -54,13 +55,19 @@ router.post("/", loginRequire, createOrder);
  * @body {}
  * @access login require
  */
-router.put("/:id", loginRequire, validatorId, updateOrder);
+router.put("/:id", loginRequire, adminOrManagerCheck, validatorId, updateOrder);
 
 /**
  * @route Delete /orders:/orderid
  * @description delete a order
  * @access login require
  */
-router.delete("/:id", loginRequire, validatorId, deleteOrder);
+router.delete(
+  "/:id",
+  loginRequire,
+  adminOrManagerCheck,
+  validatorId,
+  deleteOrder
+);
 
 module.exports = router;

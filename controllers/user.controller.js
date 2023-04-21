@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const { sendResponse, AppError, catchAsync } = require("../helpers/utils");
 const bcrypt = require("bcryptjs");
 const userController = {};
@@ -8,7 +10,6 @@ const limitDefault = process.env.LIMIT;
 userController.register = catchAsync(async (req, res, next) => {
   //Get data from request
   let { name, email, password, role, address } = req.body;
-  console.log(req.body);
   name = name.toLowerCase();
 
   // Validation
@@ -17,11 +18,54 @@ userController.register = catchAsync(async (req, res, next) => {
     throw new AppError(400, "Tài khoản đã tồn tại", "Registration Error");
   }
 
-  //Process
-  const salt = await bcrypt.genSalt(10);
-  password = await bcrypt.hash(password, salt);
-  user = await User.create({ name, email, password, role, address });
-  const accessToken = await user.generateToken();
+  let accessToken = null;
+  let tokenRole = null;
+  if (role === "manager") {
+    throw new AppError(
+      400,
+      "Can't create an account as manager",
+      "Access denied"
+    );
+  }
+  if (role === "customer") {
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(password, salt);
+    user = await User.create({ name, email, password, role, address });
+    accessToken = await user.generateToken();
+  }
+  if (role === "employee") {
+    const tokenString = req.headers.authorization;
+    if (!tokenString)
+      throw new AppError(401, "Login require", "Authntication error");
+    const token = tokenString.replace("Bearer ", "");
+    jwt.verify(token, JWT_SECRET_KEY, (err, payload) => {
+      if (err) {
+        if (err.name === "TokenExpiredError") {
+          throw new AppError(401, "Token expired", "Authntication error");
+        } else {
+          throw new AppError(401, "Token is invalid", "Authntication error");
+        }
+      }
+      tokenRole = payload.role;
+    });
+    if (tokenRole !== "manager") {
+      throw new AppError(
+        400,
+        "Account is not permission for this feature-access as Manager",
+        "permission Error"
+      );
+    }
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(password, salt);
+    user = await User.create({ name, email, password, role, address });
+    accessToken = await user.generateToken();
+  }
+
+  // //Process
+  // const salt = await bcrypt.genSalt(10);
+  // password = await bcrypt.hash(password, salt);
+  // user = await User.create({ name, email, password, role, address });
+  // const accessToken = await user.generateToken();
 
   //Response
   return sendResponse(

@@ -18,6 +18,7 @@ authentication.loginRequire = (req, res, next) => {
         }
       }
       req.userId = payload._id;
+      req.permission = payload.role;
     });
     next();
   } catch (error) {
